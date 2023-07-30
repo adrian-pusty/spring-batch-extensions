@@ -39,6 +39,8 @@ import org.springframework.context.annotation.Scope;
  */
 public class BeanWrapperRowMapperTest {
 
+	private static final String[] HEADER = {"id", "lastName", "firstName", "position", "birthYear", "debutYear"};
+
 	@Test
 	public void givenNoNameWhenInitCompleteThenIllegalStateShouldOccur() {
 		Assertions.assertThatThrownBy(() -> {
@@ -51,10 +53,11 @@ public class BeanWrapperRowMapperTest {
 	public void givenAValidRowWhenMappingThenAValidPlayerShouldBeConstructed() throws Exception {
 		BeanWrapperRowMapper<Player> mapper = new BeanWrapperRowMapper<>();
 		mapper.setTargetType(Player.class);
+		mapper.setHeader(HEADER);
 		mapper.afterPropertiesSet();
 
 		List<String[]> rows = new ArrayList<>();
-		rows.add(new String[] { "id", "lastName", "firstName", "position", "birthYear", "debutYear" });
+		rows.add(HEADER);
 		rows.add(new String[] { "AbduKa00", "Abdul-Jabbar", "Karim", "rb", "1974", "1996" });
 		MockSheet sheet = new MockSheet("players", rows);
 
@@ -82,9 +85,10 @@ public class BeanWrapperRowMapperTest {
 
 		ApplicationContext ctx = new AnnotationConfigApplicationContext(TestConfig.class);
 		BeanWrapperRowMapper<Player> mapper = ctx.getBean("playerRowMapper", BeanWrapperRowMapper.class);
+		mapper.setHeader(HEADER);
 
 		List<String[]> rows = new ArrayList<>();
-		rows.add(new String[] { "id", "lastName", "firstName", "position", "birthYear", "debutYear" });
+		rows.add(HEADER);
 		rows.add(new String[] { "AbduKa00", "Abdul-Jabbar", "Karim", "rb", "1974", "1996" });
 		MockSheet sheet = new MockSheet("players", rows);
 

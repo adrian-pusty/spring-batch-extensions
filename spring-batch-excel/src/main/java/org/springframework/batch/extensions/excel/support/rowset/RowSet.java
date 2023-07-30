@@ -16,8 +16,6 @@
 
 package org.springframework.batch.extensions.excel.support.rowset;
 
-import java.util.Properties;
-
 /**
  * Used by the {@code org.springframework.batch.item.excel.AbstractExcelItemReader} to
  * abstract away the complexities of the underlying Excel API implementations.
@@ -51,13 +49,4 @@ public interface RowSet {
 	 * @return the row as a {@code String[]}
 	 */
 	String[] getCurrentRow();
-
-	/**
-	 * Construct name-value pairs from the column names and string values. {@code null}
-	 * values are omitted.
-	 * @return some properties representing the row set.
-	 * @throws IllegalStateException if the column name meta data is not available.
-	 */
-	Properties getProperties();
-
 }

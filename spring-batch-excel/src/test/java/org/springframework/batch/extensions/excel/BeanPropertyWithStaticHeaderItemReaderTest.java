@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class BeanPropertyWithStaticHeaderItemReaderTest {
 
+	private static final String[] HEADER = new String[] { "id", "lastName", "firstName", "position", "birthYear", "debutYear" };
 	private MockExcelItemReader<Player> reader;
 
 	@BeforeEach
@@ -51,13 +52,13 @@ public class BeanPropertyWithStaticHeaderItemReaderTest {
 
 		BeanWrapperRowMapper<Player> rowMapper = new BeanWrapperRowMapper<>();
 		rowMapper.setTargetType(Player.class);
+		rowMapper.setHeader(HEADER);
 		rowMapper.afterPropertiesSet();
 
 		this.reader.setRowMapper(rowMapper);
 
 		DefaultRowSetFactory factory = new DefaultRowSetFactory();
-		factory.setColumnNameExtractor(new StaticColumnNameExtractor(
-				new String[] { "id", "lastName", "firstName", "position", "birthYear", "debutYear" }));
+		factory.setColumnNameExtractor(new StaticColumnNameExtractor(HEADER));
 		this.reader.setRowSetFactory(factory);
 		this.reader.afterPropertiesSet();
 		this.reader.open(executionContext);

@@ -39,9 +39,10 @@ public class BeanPropertyItemReaderTest {
 	@BeforeEach
 	public void setup() throws Exception {
 		ExecutionContext executionContext = new ExecutionContext();
+		String[] header = {"id", "lastName", "firstName", "position", "birthYear", "debutYear"};
 
 		List<String[]> rows = new ArrayList<>();
-		rows.add(new String[] { "id", "lastName", "firstName", "position", "birthYear", "debutYear" });
+		rows.add(header);
 		rows.add(new String[] { "AbduKa00", "Abdul-Jabbar", "Karim", "rb", "1974", "1996" });
 		rows.add(new String[] { "AbduRa00", "Abdullah", "Rabih", "rb", "1975", "1999" });
 		MockSheet sheet = new MockSheet("players", rows);
@@ -51,6 +52,7 @@ public class BeanPropertyItemReaderTest {
 		BeanWrapperRowMapper<Player> rowMapper = new BeanWrapperRowMapper<>();
 		rowMapper.setTargetType(Player.class);
 		rowMapper.afterPropertiesSet();
+		rowMapper.setHeader(header);
 
 		this.reader.setLinesToSkip(1); // Skip first row as that is the header
 		this.reader.setRowMapper(rowMapper);

@@ -99,6 +99,8 @@ public class BeanWrapperRowMapper<T> extends DefaultPropertyEditorRegistrar
 
 	private boolean strict = true;
 
+	private String[] header;
+
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) {
 		this.beanFactory = beanFactory;
@@ -138,6 +140,10 @@ public class BeanWrapperRowMapper<T> extends DefaultPropertyEditorRegistrar
 		this.type = type;
 	}
 
+	public void setHeader(String[] header) {
+		this.header = header;
+	}
+
 	/**
 	 * Check that precisely one of type or prototype bean name is specified.
 	 * @throws IllegalStateException if neither is set or both properties are set.
@@ -165,11 +171,33 @@ public class BeanWrapperRowMapper<T> extends DefaultPropertyEditorRegistrar
 	public T mapRow(RowSet rs) throws BindException {
 		T copy = getBean();
 		DataBinder binder = createBinder(copy);
-		binder.bind(new MutablePropertyValues(getBeanProperties(copy, rs.getProperties())));
+		binder.bind(new MutablePropertyValues(getBeanProperties(copy, getProperties(rs))));
 		if (binder.getBindingResult().hasErrors()) {
 			throw new BindException(binder.getBindingResult());
 		}
 		return copy;
+	}
+
+	/**
+	 * Construct name-value pairs from the column names and string values. {@code null}
+	 * values are omitted.
+	 * @param rowSet rowSet
+	 * @return some properties representing the row set.
+	 * @throws IllegalStateException if the column name meta data is not available.
+	 */
+	public Properties getProperties(RowSet rowSet) {
+		if (this.header == null) {
+			throw new IllegalStateException("Cannot create properties without meta data");
+		}
+
+		Properties props = new Properties();
+		for (int i = 0; i < rowSet.getCurrentRow().length; i++) {
+			String value = rowSet.getCurrentRow()[i];
+			if (value != null) {
+				props.setProperty(this.header[i], value);
+			}
+		}
+		return props;
 	}
 
 	/**

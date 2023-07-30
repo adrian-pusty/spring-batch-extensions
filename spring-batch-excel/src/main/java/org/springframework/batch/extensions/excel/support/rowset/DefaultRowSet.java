@@ -17,7 +17,6 @@
 package org.springframework.batch.extensions.excel.support.rowset;
 
 import java.util.Iterator;
-import java.util.Properties;
 
 import org.springframework.batch.extensions.excel.Sheet;
 
@@ -67,23 +66,6 @@ public class DefaultRowSet implements RowSet {
 	@Override
 	public String[] getCurrentRow() {
 		return this.currentRow;
-	}
-
-	@Override
-	public Properties getProperties() {
-		final String[] names = this.metaData.getColumnNames();
-		if (names == null) {
-			throw new IllegalStateException("Cannot create properties without meta data");
-		}
-
-		Properties props = new Properties();
-		for (int i = 0; i < this.currentRow.length; i++) {
-			String value = this.currentRow[i];
-			if (value != null) {
-				props.setProperty(names[i], value);
-			}
-		}
-		return props;
 	}
 
 }
